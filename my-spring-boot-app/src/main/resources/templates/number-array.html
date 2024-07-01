@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Home</title>
+
+    <!-- add bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- add jquery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- add sweet alert -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+</head>
+<body>
+    <div class="container mt-3 mb-3">
+        <!-- back button -->
+        <div class="mb-3">
+            <a class="btn btn-primary" th:href="@{/}">Back</a>
+        </div>
+
+        <h2>Code: <span th:text="${code}"></span></h2>
+
+        <hr>
+
+        <table class="table table-bordered text-center">
+            <tbody>
+                <tr th:each="row : ${numberArray}">
+                    <td th:each="number : ${row}" th:text="${number}"></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <br>
+        <!-- create input answer -->
+        <form th:action="@{/number-array/check}" method="post" name="answer">
+            <input type="hidden" name="code" th:value="${code}">
+            <div class="mb-3">
+                <label for="answer" class="form-label">Answer</label>
+                <input type="number" min="0" max="2147483647" class="form-control" id="answer" name="answer" required>
+            </div>
+
+            <!-- create button group -->
+            <div class="btn-group" role="group" aria-label="Basic example">
+                <button type="submit" class="btn btn-primary">Check</button>
+            </div>
+        </form>
+        
+    </div>
+
+    <script>
+        // add script on document ready
+        // create timmer position absolute in right bottom
+        $(document).ready(function() {
+            // create timer
+            var timer = document.createElement('div');
+            timer.style.position = 'fixed';
+            timer.style.bottom = '0';
+            timer.style.left = '0';
+            timer.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
+            timer.style.color = 'white';
+            timer.style.padding = '10px';
+            timer.style.borderTopRightRadius = '10px';
+            document.body.appendChild(timer);
+
+            // create timer function
+            let hours = 0;
+            let minutes = 0;
+            let seconds = 0;
+
+            var time = 0;
+            var timerInterval = setInterval(function() {
+                time++;
+                hours = Math.floor(time / 3600);
+                minutes = Math.floor((time % 3600) / 60);
+                seconds = time % 60;
+                timer.innerHTML = 'Timer: ' + hours.toString().padStart(2, '0') + ':' + minutes.toString().padStart(2, '0') + ':' + seconds.toString().padStart(2, '0');
+            }, 1000);
+
+            // add event listener on form submit
+            document.forms['answer'].addEventListener('submit', function() {
+                // prevent default
+                event.preventDefault();
+
+                // make ajax request
+                $.ajax({
+                    url: '/number-array/check',
+                    type: 'post',
+                    data: $(this).serialize(),
+                    success: function(response) {
+                        console.log(response);
+                        // check if response is correct
+                        if (response.isCorrect) {
+                            // sweet alert
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Correct!',
+                                text: 'You have successfully answered the number array!',
+                            }).then(function() {
+                                // calculate total time spent
+                                var totalTime = hours * 3600 + minutes * 60 + seconds;
+                                Swal.fire({
+                                    icon: 'info',
+                                    title: 'Total Time Spent',
+                                    text: 'You spent ' + totalTime + ' seconds on this task.',
+                                });
+                            });
+
+                            // clear interval
+                            clearInterval(timerInterval);
+                        } else {
+                            // sweet alert
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Oops...',
+                                text: 'Incorrect!',
+                            });
+                        }
+                    },
+                    error: function(err) {
+                        console.log(err);
+                        // sweet alert
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: 'An error has occurred!',
+                        });
+                    }
+                });
+
+            });
+        });
+
+    </script>
+</body>
+</html>

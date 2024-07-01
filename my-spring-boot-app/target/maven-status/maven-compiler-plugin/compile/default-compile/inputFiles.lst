@@ -1,0 +1,7 @@
+/workspaces/Copilot-Hackthon/my-spring-boot-app/src/main/java/com/myapp/service/impl/NumberArrayServiceImpl.java
+/workspaces/Copilot-Hackthon/my-spring-boot-app/src/main/java/com/myapp/repository/NumberArrayRepository.java
+/workspaces/Copilot-Hackthon/my-spring-boot-app/src/main/java/com/myapp/service/NumberArrayService.java
+/workspaces/Copilot-Hackthon/my-spring-boot-app/src/main/java/com/myapp/exception/NoNumberArrayException.java
+/workspaces/Copilot-Hackthon/my-spring-boot-app/src/main/java/com/myapp/controller/HomeController.java
+/workspaces/Copilot-Hackthon/my-spring-boot-app/src/main/java/com/myapp/model/NumberArray.java
+/workspaces/Copilot-Hackthon/my-spring-boot-app/src/main/java/com/myapp/MySpringBootApplication.java
